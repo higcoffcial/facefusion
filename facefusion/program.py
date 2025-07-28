@@ -94,9 +94,9 @@ def create_output_pattern_program() -> ArgumentParser:
 
 def create_voice_extractor_program() -> ArgumentParser:
 	program = ArgumentParser(add_help = False)
-	group_face_masker = program.add_argument_group('voice extractor')
+	group_voice_extractor = program.add_argument_group('voice extractor')
 	# TODO: wording
-	group_face_masker.add_argument('--voice-extractor-model', help = wording.get('help.voice_extractor_model'), default = config.get_str_value('voice_extractor', 'voice_extractor_model', 'kim_vocal_2'), choices = facefusion.choices.voice_extractor_models)
+	group_voice_extractor.add_argument('--voice-extractor-model', help = wording.get('help.voice_extractor_model'), default = config.get_str_value('voice_extractor', 'voice_extractor_model', 'kim_vocal_2'), choices = facefusion.choices.voice_extractor_models)
 	job_store.register_step_keys([ 'voice_extractor_model' ])
 	return program
 
