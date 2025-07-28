@@ -8,7 +8,7 @@ from facefusion import inference_manager, state_manager
 from facefusion.download import conditional_download_hashes, conditional_download_sources, resolve_download_url
 from facefusion.filesystem import resolve_relative_path
 from facefusion.thread_helper import thread_semaphore
-from facefusion.types import Audio, AudioChunk, DownloadScope, DownloadSet, InferencePool, ModelOptions, ModelSet
+from facefusion.types import Audio, AudioChunk, DownloadScope, DownloadSet, InferencePool, ModelSet
 
 
 @lru_cache(maxsize = None)
