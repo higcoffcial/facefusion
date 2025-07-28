@@ -48,6 +48,10 @@ def read_voice(audio_path : str, fps : Fps) -> Optional[List[AudioFrame]]:
 		audio = numpy.frombuffer(audio_buffer, dtype = numpy.int16).reshape(-1, 2)
 		audio = batch_extract_voice(audio, voice_chunk_size, voice_step_size)
 		audio = prepare_voice(audio)
+		from scipy.io import wavfile
+		wavfile.write('/home/hari/Videos/samples/output_kim_vocal_1.wav', 16000, audio)
+		print(audio.shape)
+		exit()
 		spectrogram = create_spectrogram(audio)
 		audio_frames = extract_audio_frames(spectrogram, fps)
 		return audio_frames

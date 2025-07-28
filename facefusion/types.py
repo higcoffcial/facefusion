@@ -113,6 +113,8 @@ FaceMaskRegion = Literal['skin', 'left-eyebrow', 'right-eyebrow', 'left-eye', 'r
 FaceMaskRegionSet : TypeAlias = Dict[FaceMaskRegion, int]
 FaceMaskAreaSet : TypeAlias = Dict[FaceMaskArea, List[int]]
 
+VoiceExtractorModel = Literal['kim_vocal_1', 'kim_vocal_2']
+
 AudioFormat = Literal['flac', 'm4a', 'mp3', 'ogg', 'opus', 'wav']
 ImageFormat = Literal['bmp', 'jpeg', 'png', 'tiff', 'webp']
 VideoFormat = Literal['avi', 'm4v', 'mkv', 'mov', 'mp4', 'webm']
@@ -269,6 +271,7 @@ StateKey = Literal\
 	'reference_face_position',
 	'reference_face_distance',
 	'reference_frame_number',
+	'voice_extractor_model',
 	'face_occluder_model',
 	'face_parser_model',
 	'face_mask_types',
@@ -337,6 +340,7 @@ State = TypedDict('State',
 	'reference_face_position' : int,
 	'reference_face_distance' : float,
 	'reference_frame_number' : int,
+	'voice_extractor_model': VoiceExtractorModel,
 	'face_occluder_model' : FaceOccluderModel,
 	'face_parser_model' : FaceParserModel,
 	'face_mask_types' : List[FaceMaskType],

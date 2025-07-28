@@ -4,11 +4,11 @@ from typing import Tuple
 import numpy
 import scipy
 
-from facefusion import inference_manager
+from facefusion import inference_manager, state_manager
 from facefusion.download import conditional_download_hashes, conditional_download_sources, resolve_download_url
 from facefusion.filesystem import resolve_relative_path
 from facefusion.thread_helper import thread_semaphore
-from facefusion.types import Audio, AudioChunk, DownloadScope, InferencePool, ModelOptions, ModelSet
+from facefusion.types import Audio, AudioChunk, DownloadScope, DownloadSet, InferencePool, ModelOptions, ModelSet
 
 
 @lru_cache(maxsize = None)
@@ -38,24 +38,35 @@ def create_static_model_set(download_scope : DownloadScope) -> ModelSet:
 
 
 def get_inference_pool() -> InferencePool:
-	model_names = [ 'kim_vocal_2' ]
-	model_source_set = get_model_options().get('sources')
+	model_names = [ state_manager.get_item('voice_extractor_model') ]
+	print(model_names)
+	exit()
+	_, model_source_set = collect_model_downloads()
 
 	return inference_manager.get_inference_pool(__name__, model_names, model_source_set)
 
 
 def clear_inference_pool() -> None:
-	model_names = [ 'kim_vocal_2' ]
+	model_names = [ state_manager.get_item('voice_extractor_model') ]
 	inference_manager.clear_inference_pool(__name__, model_names)
 
 
-def get_model_options() -> ModelOptions:
-	return create_static_model_set('full').get('kim_vocal_2')
+def collect_model_downloads() -> Tuple[DownloadSet, DownloadSet]:
+	model_set = create_static_model_set('full')
+	model_hash_set = {}
+	model_source_set = {}
+
+	for voice_extractor_model in [ 'kim_vocal_2' ]:
+		if state_manager.get_item('voice_extractor_model') == voice_extractor_model:
+			model_hash_set[voice_extractor_model] = model_set.get(voice_extractor_model).get('hashes').get('voice_extractor')
+			model_source_set[voice_extractor_model] = model_set.get(voice_extractor_model).get('sources').get('voice_extractor')
+
+	return model_hash_set, model_source_set
 
 
 def pre_check() -> bool:
-	model_hash_set = get_model_options().get('hashes')
-	model_source_set = get_model_options().get('sources')
+	return True
+	model_hash_set, model_source_set = collect_model_downloads()
 
 	return conditional_download_hashes(model_hash_set) and conditional_download_sources(model_source_set)
 
@@ -82,6 +93,8 @@ def extract_voice(temp_audio_chunk : AudioChunk) -> AudioChunk:
 	temp_audio_chunk = forward(temp_audio_chunk)
 	temp_audio_chunk = compose_audio_chunk(temp_audio_chunk, trim_size)
 	temp_audio_chunk = normalize_audio_chunk(temp_audio_chunk, chunk_size, trim_size, pad_size)
+	print(temp_audio_chunk.shape)
+	exit()
 	return temp_audio_chunk
 
 
